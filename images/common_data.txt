@@ -1,0 +1,26 @@
+.sprite { background: url('sprite.png') no-repeat top left;  } 
+.sprite.coin { background-position: 0px 0px; width: 53px; height: 51px;  } 
+.sprite.deck { background-position: -58px 0px; width: 646px; height: 128px;  } 
+.sprite.fight_tap { background-position: -709px 0px; width: 178px; height: 160px;  } 
+.sprite.gift_coin { background-position: -892px 0px; width: 106px; height: 112px;  } 
+.sprite.gift_nut { background-position: -1003px 0px; width: 130px; height: 112px;  } 
+.sprite.hammer { background-position: -1138px 0px; width: 60px; height: 50px;  } 
+.sprite.hole { background-position: -1203px 0px; width: 333px; height: 103px;  } 
+.sprite.hole_on { background-position: -1541px 0px; width: 360px; height: 150px;  } 
+.sprite.HP_bar_BG { background-position: -1906px 0px; width: 135px; height: 26px;  } 
+.sprite.menu_off { background-position: -2046px 0px; width: 120px; height: 100px;  } 
+.sprite.menu_on { background-position: -2171px 0px; width: 120px; height: 100px;  } 
+.sprite.shake_line { background-position: -2296px 0px; width: 162px; height: 52px;  } 
+.sprite.shake_star { background-position: -2463px 0px; width: 25px; height: 25px;  } 
+.sprite.slice { background-position: -2493px 0px; width: 196px; height: 99px;  } 
+.sprite.avatar_bg { background-position: -2694px 0px; width: 80px; height: 80px;  } 
+.sprite.back_off { background-position: -2779px 0px; width: 88px; height: 62px;  } 
+.sprite.back_on { background-position: -2872px 0px; width: 120px; height: 100px;  } 
+.sprite.blood_round_left { background-position: -2997px 0px; width: 6px; height: 15px;  } 
+.sprite.blood_round_right { background-position: -3008px 0px; width: 6px; height: 15px;  } 
+.sprite.blood_straight { background-position: -3019px 0px; width: 2px; height: 15px;  } 
+.sprite.clock_bg_half_left { background-position: -3026px 0px; width: 19px; height: 39px;  } 
+.sprite.clock_bg_half_right { background-position: -3050px 0px; width: 19px; height: 39px;  } 
+.sprite.clock_pointing { background-position: -3074px 0px; width: 20px; height: 20px;  } 
+.sprite.clock_yellow_half_left { background-position: -3099px 0px; width: 17px; height: 35px;  } 
+.sprite.clock_yellow_half_right { background-position: -3121px 0px; width: 17px; height: 35px;  }
