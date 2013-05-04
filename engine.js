@@ -328,7 +328,8 @@ var TouchControls = function() {
       y = touch.pageY;
 	  x = getBasicPosition(x);
 	  y = getBasicPosition(y);
-	  console.log(x + "|" + y);
+	  touchBoard.add(new TouchWrong(x, y));
+	  //console.log(x + "|" + y);
     }
 
     if(e.type == 'touchstart' || e.type == 'touchend') {

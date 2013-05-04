@@ -93,7 +93,6 @@ var startGame = function() {
   Game.setBoard(2, targetBoard);
   
   touchBoard = new GameBoard();
-  touchBoard.add(new TouchWrong(100, 100));
   Game.setBoard(3, touchBoard);
   
   
@@ -299,7 +298,7 @@ Enemy.prototype.hit = function(damage) {
 };
 
 var TouchWrong = function(centerX,centerY) {
-  this.setup('fight_tap', { frame: 0 });
+  this.setup('shake_star', { frame: 0 });
   this.x = centerX - this.ws/2;
   this.y = centerY - this.hs/2;
   this.dt = 0;
