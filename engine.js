@@ -302,53 +302,52 @@ Level.prototype.draw = function(ctx) { };
 
 
 var TouchControls = function() {
-  var gutterWidth = 10;
-  var unitWidth = Game.width/5;
-  var blockWidth = unitWidth-gutterWidth;
-
   this.draw = function(ctx) {
-  /*
-    ctx.save();
-    var yLoc = Game.height - unitWidth;
-    this.drawSquare(ctx,gutterWidth,yLoc,"\u25C0", Game.keys['left']);
-    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"\u25B6", Game.keys['right']);
-    this.drawSquare(ctx,4*unitWidth,yLoc,"A",Game.keys['fire']);
-    ctx.restore();
-	*/
+  
   };
 
   this.step = function(dt) { };
 
-  this.trackTouch = function(e) {
-    var touch, x;
+  this.trackTouchStart = function(e) {
+	autoIncrementIdentifier ++;
     e.preventDefault();
-    for(var i=0;i<e.targetTouches.length;i++) {
-      touch = e.targetTouches[i];
-      x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
-      y = touch.pageY;
-	  x = getBasicPosition(x);
-	  y = getBasicPosition(y);
-	  touchBoard.add(new TouchWrong(x, y));
-	  //console.log(x + "|" + y);
-    }
-
-    if(e.type == 'touchstart' || e.type == 'touchend') {
-      for(i=0;i<e.changedTouches.length;i++) {
-        touch = e.changedTouches[i];
-        x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
-        // do something
-      }
-    }
+	var touch;
+	for(var i=0;i<e.targetTouches.length;i++) {
+		touch = e.targetTouches[i];
+		x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
+		y = touch.pageY;
+		x = getBasicPosition(x);
+		y = getBasicPosition(y);
+		touchBoard.add(new TouchAction(x, y, touch.identifier, autoIncrementIdentifier));
+		//console.log(touchBoard);
+	}
+  };
+  
+  this.trackTouchEnd = function(e) {
+    e.preventDefault();
+	var touch;
+	for(i=0;i<e.changedTouches.length;i++) {
+		touch = e.changedTouches[i];
+		//alert(touch.identifier);
+		x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
+		y = touch.pageY;
+		x = getBasicPosition(x);
+		y = getBasicPosition(y);
+		for(var i = 0, nLen = touchBoard.objects.length; i < nLen; i++){
+			var touchAction = touchBoard.objects[i];
+			if (touchAction.identifier - touchAction.autoIdentifier  == touch.identifier){
+				touchAction.toX = x;
+				touchAction.toY = y;
+				touchAction.dt = 0;
+				break;
+			}
+		}
+	}
   };
 	
-  //Game.canvas.addEventListener('touchstart',this.trackTouch,true);
-  //Game.canvas.addEventListener('touchmove',this.trackTouch,true);
-  //Game.canvas.addEventListener('touchend',this.trackTouch,true);
-  Game.canvas.addEventListener('touchstart', this.trackTouch,true);
- // Game.canvas.addEventListener('mousemove',this.trackTouch,true);
-  // 	 	Game.canvas.addEventListener('mouseup',this.trackTouch,true);
-
-  Game.playerOffset = unitWidth + 20;
+  Game.canvas.addEventListener('touchstart',this.trackTouchStart,true);
+  Game.canvas.addEventListener('touchmove',this.trackTouchMove,true);
+  Game.canvas.addEventListener('touchend',this.trackTouchEnd,true);
 };
 
 

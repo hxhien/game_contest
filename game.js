@@ -12,6 +12,7 @@ var sprites = {
  shake_star: {file : 'common.png', sx: 0, sy: 1485, w: 25, h: 25, frames: 1, ws : 12, hs: 12 },
  battle_bg: {file : 'bg.png', sx: 0, sy: 0, w: 960, h: 640, frames: 1, ws : 480, hs : 320},
  enemy: {file : 'enemy.png', sx: 0, sy: 0, w: 119, h: 119, frames: 1, ws : 119, hs: 119 },
+ slice: {file : 'common.png', sx: 0, sy: 1336, w: 196, h: 99, frames: 1, ws: 98, hs: 50 },
  /*
  gift_nut: {file : 'common.png', sx: 0, sy: 451, w: 130, h: 112, frames: 1 },
  gift_nut: {file : 'common.png', sx: 0, sy: 451, w: 130, h: 112, frames: 1 },
@@ -48,6 +49,8 @@ var OBJECT_PLAYER = 1,
     OBJECT_ENEMY = 4,
     OBJECT_ENEMY_PROJECTILE = 8,
     OBJECT_POWERUP = 16;
+
+var autoIncrementIdentifier = 10;
 	
 var	OBJECT_ENEMY = 1;
 
@@ -297,21 +300,76 @@ Enemy.prototype.hit = function(damage) {
   }
 };
 
-var TouchWrong = function(centerX,centerY) {
-  this.setup('shake_star', { frame: 0 });
+var TouchAction = function(centerX,centerY, identifier, autoIdentifier) {
+  this.setup('fight_tap', { frame: 0 });
+  this.fromX = centerX;
+  this.fromY = centerY;
+  this.toX = centerX;
+  this.toY = centerY;
   this.x = centerX - this.ws/2;
   this.y = centerY - this.hs/2;
-  this.dt = 0;
+  this.dt = -1;
+  this.identifier = identifier + autoIdentifier;
+  this.autoIdentifier = autoIdentifier;
 };
 
-TouchWrong.prototype = new Sprite();
+TouchAction.prototype = new Sprite();
 
-TouchWrong.prototype.step = function(dt) {
-  this.dt += dt;
-  //console.log(this.dt);
-  if(this.dt >= 0.3) {
-    this.board.remove(this);
-  }
+TouchAction.prototype.step = function(dt) {
+	if (this.dt == 0){
+		var dtX = this.fromX - this.toX;
+		var dtY = this.fromY - this.toY;
+		dtX = dtX > 0 ? dtX : -1 * dtX;
+		dtY = dtY > 0 ? dtY : -1 * dtY;
+		//alert([dtX, dtY].join(','));
+		var dtY = this.fromY - this.toY
+		if ( dtX < 30 && dtY < 30 ){
+			this.sprite = 'fight_tap';
+			this.touch_type = 'point';
+		}else{
+			this.sprite = 'slice';
+			this.touch_type = 'line';
+			var pointX = {x : this.fromX, y : this.fromY};
+			var pointY = {x : this.toX, y : this.toY};
+			this.angle = caculateAngle(pointX, pointY);
+			this.ws = lineDistance(pointX, pointY);
+		}
+	}
+	if (this.dt >= 0){
+		this.dt += dt;
+		if(this.dt >= 0.3) {
+			this.board.remove(this);
+		}
+	}
+};
+
+TouchAction.prototype.draw = function(ctx) {
+	if (this.dt >= 0){
+		if (this.touch_type == 'point'){
+			SpriteSheet.draw(ctx,this.sprite,this.x,this.y, this.ws, this.hs,this.frame);
+		}else{
+			ctx.strokeStyle = '#ff0000';
+			ctx.lineWidth = 15;
+			ctx.beginPath();
+			ctx.moveTo(this.fromX, this.fromY);
+			ctx.lineTo(this.toX, this.toY);
+
+			ctx.stroke();
+			//ctx.save();
+			//ctx.rotate(this.angle); 
+			/*
+			var s = SpriteSheet.map[this.sprite];
+			this.hs = (this.ws * this.h)/this.w;
+			ctx.drawImage(SpriteSheet.images[s.file],
+				 s.sx * s.w, 
+				 s.sy, 
+				 s.w, s.h, 
+				 Math.floor(this.fromX), Math.floor(this.fromY),
+				 this.ws, this.hs);
+			*/
+			//ctx.restore();
+		}
+	}
 };
 
 var Explosion = function(centerX,centerY) {
@@ -333,6 +391,30 @@ var getBasicPosition = function(pos){
 	return parseInt(pos / canvasScale, 10);
 };
 
+var caculateAngle = function(point1, point2){
+	var x = point2.x - point1.x;
+	var y = point2.y - point1.y;
+	var theta = Math.atan2(-y, x);
+	if (theta < 0)
+		theta += 2 * Math.PI;
+	return theta;
+	//return theta * 180 / Math.PI;
+}
+
+var lineDistance = function( point1, point2 ){
+  var xs = 0;
+  var ys = 0;
+
+  xs = point2.x - point1.x;
+  xs = xs * xs;
+
+  ys = point2.y - point1.y;
+  ys = ys * ys;
+
+  return Math.sqrt( xs + ys );
+}
+
 function log(str){
-	$("#log").html(str + "<br/>" + $("#log").html());
+	console.log(str);
+	//$("#log").html(str + "<br/>" + $("#log").html());
 }
